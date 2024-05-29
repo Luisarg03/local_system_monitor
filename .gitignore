@@ -1,3 +1,6 @@
+# Poetry
+poetry.lock
+
 # Airflow
 airflow/dags/__pycache__/
 airflow/dags/*.pyc

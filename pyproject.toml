@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "monitor-local-system"
+version = "0.1.0"
+description = ""
+authors = ["luisarg03 <luis.m.paz.03@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+psutil = "^5.9.8"
+gputil = "^1.4.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
