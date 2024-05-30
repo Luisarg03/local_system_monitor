@@ -1,0 +1,60 @@
+name: local-system-monitor
+
+networks:
+  backend:
+     driver: bridge
+
+services:
+  # ##################
+  # # KAFKA SERVICES #
+  # ##################
+  # ############
+  # # BROKER 1 #
+  # ############
+  kafka-0:
+    image: 'bitnami/kafka:3.6.1'
+    ports:
+      - '9092:9092'
+      - '9094:9094'
+    networks:
+      - backend
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@<your_host>:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    volumes:
+      - './kafka/data:/bitnami/kafka'
+      # - './kafka/kafka-config.properties:/bitnami/kafka/config/server.properties'
+
+
+# ###########
+# # MONGODB #
+# ###########
+  mongodb:
+    image: mongodb/mongodb-community-server:7.0.1-ubi8
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin_password
+
+  mongo-express:
+    image: mongo-express:1.0.2-18
+    container_name: mongo-express
+    depends_on:
+      - mongodb
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=admin_password
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+
+volumes:
+  mongodb-data:
