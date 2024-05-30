@@ -36,7 +36,6 @@ services:
 # ###########
   mongodb:
     image: mongodb/mongodb-community-server:7.0.1-ubi8
-    container_name: mongodb
     ports:
       - "27017:27017"
     volumes:
